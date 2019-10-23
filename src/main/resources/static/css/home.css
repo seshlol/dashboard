@@ -1,0 +1,86 @@
+body {
+    background-color: #E6E6E6;
+}
+
+.main {
+    width: 100%;
+    margin: 2% 0 0 0;
+    box-shadow: 0 -14px 28px rgba(0,0,0,0.25), 0 -10px 10px rgba(0,0,0,0.22);
+}
+
+.w1 {
+    width: 4%;
+}
+
+.w2 {
+    width: 8%;
+}
+
+.w3 {
+    width: 32%;
+}
+
+.p1 {
+    background-color: #F78181;
+}
+
+.p2 {
+    background-color: #F7BE81;
+}
+
+.p3 {
+    background-color: #F3F781;
+}
+
+.p4 {
+    background-color: #BEF781;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.title {
+    background-color: #CEE3F6;
+}
+
+tr {
+    height: 28px;
+    border: 1px solid black;
+}
+
+th {
+    font-weight: 500;
+    margin: 0;
+    padding: 3px 8px 3px 8px;
+    border: 1px solid black;
+}
+
+td {
+    padding: 3px 8px 3px 8px;
+    font-size: 14px;
+    border: 1px solid black;
+}
+
+.row {
+    text-align: center;
+}
+
+.row .description {
+    text-align: left;
+}
+
+.almostExpired td {
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.priorityChanged {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    left: -1px;
+    border: 3px solid blue;
+}
+
