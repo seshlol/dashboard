@@ -28,57 +28,93 @@ $(() => {
         return [...new Set(array)].sort();
     };
 
+    const toggleSortable = (executorName, status) => {
+        let isDisabled = !(executorName === 'Any' && status === 'Any');
+        $('.container').sortable('disabled', isDisabled);
+    };
+
+    const getFilteredList = (rowList) => {
+        let executorName = $('.executor').val();
+        let status = $('.status').val();
+
+        toggleSortable(executorName, status);
+
+        return rowList.filter((r) => {
+            if (executorName === 'Any') {
+                return true;
+            } else {
+                return r.executorName === executorName;
+            }
+        }).filter((r) => {
+            if (status === 'Any') {
+                return true;
+            } else {
+                return r.status === status;
+            }
+        })
+    };
+
+    const drawList = (rowList) => {
+        for (const rowFromBack of rowList) {
+            let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
+            $(rowHtml).find('.id').text(rowFromBack.id);
+            $(rowHtml).find('.src').text(rowFromBack.src);
+            if (rowFromBack.creationDateTime) {
+                $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
+            }
+            $(rowHtml).find('.client').text(rowFromBack.client);
+            $(rowHtml).find('.creatorName').text(rowFromBack.creatorName);
+            $(rowHtml).find('.executorName').text(rowFromBack.executorName);
+            $(rowHtml).find('.description').text(rowFromBack.description);
+            if (rowFromBack.lastChangedDateTime) {
+                $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
+            }
+            $(rowHtml).find('.priority').text(rowFromBack.priority);
+            $(rowHtml).find('.status').text(rowFromBack.status);
+            $(rowHtml).addClass(priorityColor(rowFromBack.priority));
+            if (rowFromBack.isDragged) {
+                $(rowHtml).addClass('isDragged');
+            }
+            if (rowFromBack.isAlmostExpired) {
+                $(rowHtml).addClass('almostExpired');
+            }
+            if (rowFromBack.priorityChanged) {
+                $(rowHtml).find('.priority').addClass('priorityChanged');
+            }
+            $('.container').append(rowHtml);
+        }
+    };
+
     $.ajax({
         type: 'GET',
         url: window.location.origin + '/getTasks',
-        success: (result) => {
-            if (!result) {
+        success: (rowList) => {
+            if (rowList === null) {
                 throw new Error('500: database error')
             }
-            const distinctExecutorNames = sortedDistinct(result.map(row => row.executorName));
+            const distinctExecutorNames = sortedDistinct(rowList.map(row => row.executorName));
             for (const option of distinctExecutorNames) {
-                let executorOpt = document.querySelector('.select-executor template').content.querySelector('option').cloneNode(true);
+                let executorOpt = document.querySelector('.executor template').content.querySelector('option').cloneNode(true);
                 executorOpt.value = option;
                 executorOpt.textContent = option;
-                $('.select-executor').append(executorOpt);
+                $('.executor').append(executorOpt);
             }
 
-            const distinctStatuses = sortedDistinct(result.map(row => row.status));
+            const distinctStatuses = sortedDistinct(rowList.map(row => row.status));
             for (const option of distinctStatuses) {
-                let statusOpt = document.querySelector('.select-status template').content.querySelector('option').cloneNode(true);
+                let statusOpt = document.querySelector('.status template').content.querySelector('option').cloneNode(true);
                 statusOpt.value = option;
                 statusOpt.textContent = option;
-                $('.select-status').append(statusOpt);
+                $('.status').append(statusOpt);
             }
 
-            for (const rowResult of result) {
-                let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
-                $(rowHtml).find('.id').text(rowResult.id);
-                $(rowHtml).find('.src').text(rowResult.src);
-                if (rowResult.creationDateTime) {
-                    $(rowHtml).find('.creationDateTime').text(normalizeDate(rowResult.creationDateTime));
-                }
-                $(rowHtml).find('.client').text(rowResult.client);
-                $(rowHtml).find('.creatorName').text(rowResult.creatorName);
-                $(rowHtml).find('.executorName').text(rowResult.executorName);
-                $(rowHtml).find('.description').text(rowResult.description);
-                if (rowResult.lastChangedDateTime) {
-                    $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowResult.lastChangedDateTime));
-                }
-                $(rowHtml).find('.priority').text(rowResult.priority);
-                $(rowHtml).find('.status').text(rowResult.status);
-                $(rowHtml).addClass(priorityColor(rowResult.priority));
-                if (rowResult.isDragged) {
-                    $(rowHtml).addClass('isDragged');
-                }
-                if (rowResult.isAlmostExpired) {
-                    $(rowHtml).addClass('almostExpired');
-                }
-                if (rowResult.priorityChanged) {
-                    $(rowHtml).find('.priority').addClass('priorityChanged');
-                }
-                $('.container').append(rowHtml);
-            }
+            drawList(rowList);
+
+            $('.select').change(() => {
+                $('.container > tr').remove();
+                let filteredList = getFilteredList(rowList);
+                drawList(filteredList);
+            });
         }
     });
 
