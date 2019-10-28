@@ -24,12 +24,35 @@ $(() => {
         return color;
     });
 
+    const sortedDistinct = (array) => {
+        return [...new Set(array)].sort();
+    };
+
     $.ajax({
         type: 'GET',
         url: window.location.origin + '/getTasks',
         success: (result) => {
+            if (!result) {
+                throw new Error('500: database error')
+            }
+            const distinctExecutorNames = sortedDistinct(result.map(row => row.executorName));
+            for (const option of distinctExecutorNames) {
+                let executorOpt = document.querySelector('.select-executor template').content.querySelector('option').cloneNode(true);
+                executorOpt.value = option;
+                executorOpt.textContent = option;
+                $('.select-executor').append(executorOpt);
+            }
+
+            const distinctStatuses = sortedDistinct(result.map(row => row.status));
+            for (const option of distinctStatuses) {
+                let statusOpt = document.querySelector('.select-status template').content.querySelector('option').cloneNode(true);
+                statusOpt.value = option;
+                statusOpt.textContent = option;
+                $('.select-status').append(statusOpt);
+            }
+
             for (const rowResult of result) {
-                let rowHtml = document.querySelector('template').content.querySelector('tr').cloneNode(true);
+                let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
                 $(rowHtml).find('.id').text(rowResult.id);
                 $(rowHtml).find('.src').text(rowResult.src);
                 if (rowResult.creationDateTime) {
@@ -52,14 +75,14 @@ $(() => {
                     $(rowHtml).addClass('almostExpired');
                 }
                 if (rowResult.priorityChanged) {
-                    $(rowHtml).addClass('priorityChanged');
+                    $(rowHtml).find('.priority').addClass('priorityChanged');
                 }
                 $('.container').append(rowHtml);
             }
         }
     });
 
-    const table = $('.container').sortable({
+    $('.container').sortable({
         onUpdate: (evt) => {
             $(evt.item).addClass('isDragged');
             let rowList = $('.container .row').map((i, el) => {

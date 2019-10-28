@@ -2,6 +2,7 @@ package ru.fheads.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,24 +16,25 @@ import ru.fheads.services.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
 public class Main {
 
-    private final TaskDAO redmineTaskDAO;
-    private final TaskDAO crmTaskDAO;
-    private final TaskDAO sdTaskDAO;
-    private final TaskService taskService;
+    private final List<TaskDAO> taskDAOS;
     private final SavedTaskRepository savedTaskRepository;
+    private final TaskService taskService;
+    private final ExecutorService executorService;
+
 
     @Autowired
-    public Main(TaskDAO redmineTaskDAO, TaskDAO crmTaskDAO, TaskDAO sdTaskDAO, TaskService taskService, SavedTaskRepository savedTaskRepository, SavedTaskRepository savedTaskRepository1) {
-        this.redmineTaskDAO = redmineTaskDAO;
-        this.crmTaskDAO = crmTaskDAO;
-        this.sdTaskDAO = sdTaskDAO;
+    public Main(List<TaskDAO> taskDAOS, SavedTaskRepository savedTaskRepository, TaskService taskService, ExecutorService executorService) {
+        this.taskDAOS = taskDAOS;
         this.taskService = taskService;
-        this.savedTaskRepository = savedTaskRepository1;
+        this.savedTaskRepository = savedTaskRepository;
+        this.executorService = executorService;
     }
 
     @GetMapping(value = "/")
@@ -47,18 +49,30 @@ public class Main {
         List<Task> resultList = new ArrayList<>();
         List<Task> freshList = new ArrayList<>();
 
-        //todo add async
-        queriedList.addAll(taskService.setRedmineProperPriority(redmineTaskDAO.getActiveTasks()));
-        queriedList.addAll(taskService.setSdProperPriority(sdTaskDAO.getActiveTasks()));
-        queriedList.addAll(taskService.setCrmProperPriority(crmTaskDAO.getActiveTasks()));
+        List<Future<List<Task>>> futures = taskDAOS.stream()
+                .map(dao -> executorService.submit(dao::getTasks))
+                .collect(Collectors.toList());
+        for (Future<List<Task>> future : futures){
+            try {
+                queriedList.addAll(future.get(3, TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        queriedList = taskService.setGeneralProperties(queriedList);
         queriedList = taskService.sortByPriorityThenByCreationDate(queriedList);
 
-        List<SavedTask> savedTaskList = (List<SavedTask>) savedTaskRepository.findAll();
-        taskService.restoreSavedOrder(queriedList, savedTaskList, resultList, freshList);
-        taskService.fillWithNewTasks(queriedList, savedTaskList, freshList);
-        taskService.insertIntoByPriority(resultList, freshList);
-
-        return resultList;
+        List<SavedTask> savedList = (List<SavedTask>) savedTaskRepository.findAll();
+        if (savedList.isEmpty()) {
+            return queriedList;
+        } else {
+            taskService.restoreSavedOrder(queriedList, savedList, resultList, freshList);
+            taskService.fillWithNewTasks(queriedList, savedList, freshList);
+            taskService.insertIntoByPriority(resultList, freshList);
+            return resultList;
+        }
     }
 
     @ResponseBody

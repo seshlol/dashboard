@@ -19,7 +19,7 @@ public class sdTaskDAO implements TaskDAO {
 
     @Override
     @SuppressWarnings("all")
-    public List<Task> getActiveTasks() {
+    public List<Task> getTasks() {
         return sdEntityManagerFactory
                 .createEntityManager()
                 .createNativeQuery(

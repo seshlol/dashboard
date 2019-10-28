@@ -19,7 +19,7 @@ public class CrmTaskDAO implements TaskDAO {
 
     @Override
     @SuppressWarnings("all")
-    public List<Task> getActiveTasks() {
+    public List<Task> getTasks() {
         return crmEntityManagerFactory
                 .createEntityManager()
                 .createNativeQuery(
@@ -27,8 +27,8 @@ public class CrmTaskDAO implements TaskDAO {
                                 "       'CRM'                                                                                                 AS src, " +
                                 "       STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s') AS creationDateTime, " +
                                 "       vtiger_activity.activitytype                                                                          AS client, " +
-                                "       ''                                                                                                    AS creatorName, " +
-                                "       ''                                                                                                    AS executorName, " +
+                                "       'Пользователь CRM'                                                                                    AS creatorName, " +
+                                "       'Пользователь CRM'                                                                                    AS executorName, " +
                                 "       vtiger_activity.subject                                                                               AS description, " +
                                 "       ''                                                                                                    AS lastChangedDateTime, " +
                                 "       vtiger_taskpriority.taskpriorityid                                                                    AS priority, " +
