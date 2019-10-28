@@ -33,57 +33,32 @@ $(() => {
         $('.container').sortable('disabled', isDisabled);
     };
 
-    const getFilteredList = (rowList) => {
+    const getFilteredList = (frontList) => {
         let executorName = $('.executor').val();
         let status = $('.status').val();
 
         toggleSortable(executorName, status);
 
-        return rowList.filter((r) => {
+        return $(frontList).filter((i, el) => {
             if (executorName === 'Any') {
                 return true;
             } else {
-                return r.executorName === executorName;
+                return $(el).find('.executorName').text() === executorName;
             }
-        }).filter((r) => {
+        }).filter((i, el) => {
             if (status === 'Any') {
                 return true;
             } else {
-                return r.status === status;
+                return $(el).find('.status').text() === status;
             }
         })
     };
 
-    const drawList = (rowList) => {
-        for (const rowFromBack of rowList) {
-            let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
-            $(rowHtml).find('.id').text(rowFromBack.id);
-            $(rowHtml).find('.src').text(rowFromBack.src);
-            if (rowFromBack.creationDateTime) {
-                $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
-            }
-            $(rowHtml).find('.client').text(rowFromBack.client);
-            $(rowHtml).find('.creatorName').text(rowFromBack.creatorName);
-            $(rowHtml).find('.executorName').text(rowFromBack.executorName);
-            $(rowHtml).find('.description').text(rowFromBack.description);
-            if (rowFromBack.lastChangedDateTime) {
-                $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
-            }
-            $(rowHtml).find('.priority').text(rowFromBack.priority);
-            $(rowHtml).find('.status').text(rowFromBack.status);
-            $(rowHtml).addClass(priorityColor(rowFromBack.priority));
-            if (rowFromBack.isDragged) {
-                $(rowHtml).addClass('isDragged');
-            }
-            if (rowFromBack.isAlmostExpired) {
-                $(rowHtml).addClass('almostExpired');
-            }
-            if (rowFromBack.priorityChanged) {
-                $(rowHtml).find('.priority').addClass('priorityChanged');
-            }
-            $('.container').append(rowHtml);
-        }
+    const drawList = (frontList) => {
+        $(frontList).each((i, el) => $('.container').append($(el)));
     };
+
+    let frontList = [];
 
     $.ajax({
         type: 'GET',
@@ -108,12 +83,40 @@ $(() => {
                 $('.status').append(statusOpt);
             }
 
-            drawList(rowList);
+            for (const rowFromBack of rowList) {
+                let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
+                $(rowHtml).find('.id').text(rowFromBack.id);
+                $(rowHtml).find('.src').text(rowFromBack.src);
+                if (rowFromBack.creationDateTime) {
+                    $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
+                }
+                $(rowHtml).find('.client').text(rowFromBack.client);
+                $(rowHtml).find('.creatorName').text(rowFromBack.creatorName);
+                $(rowHtml).find('.executorName').text(rowFromBack.executorName);
+                $(rowHtml).find('.description').text(rowFromBack.description);
+                if (rowFromBack.lastChangedDateTime) {
+                    $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
+                }
+                $(rowHtml).find('.priority').text(rowFromBack.priority);
+                $(rowHtml).find('.status').text(rowFromBack.status);
+                $(rowHtml).addClass(priorityColor(rowFromBack.priority));
+                if (rowFromBack.isDragged) {
+                    $(rowHtml).addClass('isDragged');
+                }
+                if (rowFromBack.isAlmostExpired) {
+                    $(rowHtml).addClass('almostExpired');
+                }
+                if (rowFromBack.priorityChanged) {
+                    $(rowHtml).find('.priority').addClass('priorityChanged');
+                }
+                $('.container').append(rowHtml);
+            }
+
+            frontList = $('.container .row');
 
             $('.select').change(() => {
-                $('.container > tr').remove();
-                let filteredList = getFilteredList(rowList);
-                drawList(filteredList);
+                $('.container > .row').remove();
+                drawList(getFilteredList(frontList));
             });
         }
     });
@@ -121,7 +124,8 @@ $(() => {
     $('.container').sortable({
         onUpdate: (evt) => {
             $(evt.item).addClass('isDragged');
-            let rowList = $('.container .row').map((i, el) => {
+            frontList = $('.container .row');
+            let rowList = frontList.map((i, el) => {
                 return {
                     compositeId: $(el).find('.id').text() + '-' + $(el).find('.src').text(),
                     priority: $(el).find('.priority').text(),
