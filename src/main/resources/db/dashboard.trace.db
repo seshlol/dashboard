@@ -1265,3 +1265,15 @@ Caused by: java.nio.channels.ClosedByInterruptException
 	at org.h2.store.fs.FileNio.size(FilePathNio.java:58)
 	at org.h2.mvstore.FileStore.open(FileStore.java:176)
 	... 139 more
+2019-10-31 21:54:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "DROP SAVEDTASK[*] "; ожидалось "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"
+Syntax error in SQL statement "DROP SAVEDTASK[*] "; expected "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"; SQL statement:
+drop SAVEDTASK [42001-199]
+2019-10-31 21:54:02 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "DROP SAVEDTASK[*] "; ожидалось "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"
+Syntax error in SQL statement "DROP SAVEDTASK[*] "; expected "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"; SQL statement:
+drop SAVEDTASK [42001-199]
+2019-10-31 21:58:28 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "HIBERNATE_SEQUENCE" не найдена
+Table "HIBERNATE_SEQUENCE" not found; SQL statement:
+select next_val as id_val from hibernate_sequence for update [42102-199]

@@ -3,10 +3,8 @@ package ru.fheads.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import ru.fheads.dao.TaskDAO;
 import ru.fheads.entities.SavedTask;
 import ru.fheads.entities.Task;
@@ -14,7 +12,9 @@ import ru.fheads.dao.dashboard.SavedTaskRepository;
 import ru.fheads.services.TaskService;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -42,11 +42,12 @@ public class Main {
     }
 
     @ResponseBody
-    @GetMapping(value = "/getTasks")
-    public List<Task> getTasks() {
+    @GetMapping(value = "/getData")
+    public List<Task> getTasks(@RequestParam String executorName, @RequestParam String status) {
         List<Task> queriedList = new ArrayList<>();
         List<Task> resultList = new ArrayList<>();
         List<Task> freshList = new ArrayList<>();
+        Map<String, Object> data = new HashMap<>();
 
         List<Future<List<Task>>> futures = taskDAOS.stream()
                 .map(dao -> executorService.submit(dao::getTasks))
@@ -61,6 +62,12 @@ public class Main {
         }
 
         queriedList = taskService.setGeneralProperties(queriedList);
+
+        queriedList.forEach(t -> {
+            //todo create options list with number of tasks
+        });
+
+        queriedList = taskService.filter(queriedList, executorName, status);
         queriedList = taskService.sortByPriorityThenByCreationDate(queriedList);
 
         List<SavedTask> savedList = (List<SavedTask>) savedTaskRepository.findAll();
@@ -76,8 +83,9 @@ public class Main {
 
     @ResponseBody
     @PostMapping(value = "/changeOrder")
-    public void changeOrder(@RequestBody List<SavedTask> savedTaskList) {
-        savedTaskRepository.deleteAll();
+    public void changeOrder(@RequestParam String executorName, @RequestParam String status,
+                            @RequestBody List<SavedTask> savedTaskList) {
+        savedTaskRepository.deleteByExecutorNameAndStatus(executorName, status);
         savedTaskRepository.saveAll(savedTaskList);
     }
 }

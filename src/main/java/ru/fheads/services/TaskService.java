@@ -1,6 +1,7 @@
 package ru.fheads.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import ru.fheads.entities.SavedTask;
 import ru.fheads.entities.Task;
 
@@ -207,5 +208,19 @@ public class TaskService {
                         }
                     }
                 }).collect(Collectors.toList());
+    }
+
+    public List<Task> filter(List<Task> list, String executorName, String status) {
+        if (!"Any".equals(executorName)) {
+            list = list.stream()
+                    .filter(t -> t.getExecutorName().equals(executorName))
+                    .collect(Collectors.toList());
+        }
+        if (!"Any".equals(status)) {
+            list = list.stream()
+                    .filter(t -> t.getStatus().equals(status))
+                    .collect(Collectors.toList());
+        }
+        return list;
     }
 }

@@ -28,61 +28,14 @@ $(() => {
         return [...new Set(array)].sort();
     };
 
-    const toggleSortable = (executorName, status) => {
-        let isDisabled = !(executorName === 'Any' && status === 'Any');
-        $('.container').sortable('disabled', isDisabled);
+    const drawList = (list) => {
+        $(list).each((i, el) => $('.container').append($(el)));
     };
-
-    const getFilteredList = (frontList) => {
-        let executorName = $('.executor').val();
-        let status = $('.status').val();
-
-        toggleSortable(executorName, status);
-
-        return $(frontList).filter((i, el) => {
-            if (executorName === 'Any') {
-                return true;
-            } else {
-                return $(el).find('.executorName').text() === executorName;
-            }
-        }).filter((i, el) => {
-            if (status === 'Any') {
-                return true;
-            } else {
-                return $(el).find('.status').text() === status;
-            }
-        })
-    };
-
-    const drawList = (frontList) => {
-        $(frontList).each((i, el) => $('.container').append($(el)));
-    };
-
-    let frontList = [];
 
     $.ajax({
         type: 'GET',
-        url: window.location.origin + '/getTasks',
+        url: window.location.origin + `/getData?executorName=${$('.executorName-filter').val()}&status=${$('.status-filter').val()}`,
         success: (rowList) => {
-            if (rowList === null) {
-                throw new Error('500: database error')
-            }
-            const distinctExecutorNames = sortedDistinct(rowList.map(row => row.executorName));
-            for (const option of distinctExecutorNames) {
-                let executorOpt = document.querySelector('.executor template').content.querySelector('option').cloneNode(true);
-                executorOpt.value = option;
-                executorOpt.textContent = option;
-                $('.executor').append(executorOpt);
-            }
-
-            const distinctStatuses = sortedDistinct(rowList.map(row => row.status));
-            for (const option of distinctStatuses) {
-                let statusOpt = document.querySelector('.status template').content.querySelector('option').cloneNode(true);
-                statusOpt.value = option;
-                statusOpt.textContent = option;
-                $('.status').append(statusOpt);
-            }
-
             for (const rowFromBack of rowList) {
                 let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
                 $(rowHtml).find('.id').text(rowFromBack.id);
@@ -111,34 +64,41 @@ $(() => {
                 }
                 $('.container').append(rowHtml);
             }
-
-            frontList = $('.container .row');
-
-            $('.select').change(() => {
-                $('.container > .row').remove();
-                drawList(getFilteredList(frontList));
-            });
         }
     });
 
     $('.container').sortable({
         onUpdate: (evt) => {
             $(evt.item).addClass('isDragged');
-            frontList = $('.container .row');
-            let rowList = frontList.map((i, el) => {
+            let rowList = $('.container .row').map((i, el) => {
                 return {
                     compositeId: $(el).find('.id').text() + '-' + $(el).find('.src').text(),
                     priority: $(el).find('.priority').text(),
-                    isDragged: $(el).hasClass('isDragged')
+                    isDragged: $(el).hasClass('isDragged'),
+                    position: i,
+                    executorName: $('.executorName-filter').val(),
+                    status: $('.status-filter').val()
                 }
             }).get();
             $.ajax({
                 type: 'POST',
-                url: window.location.origin + '/changeOrder',
+                url: window.location.origin + `/changeOrder?executorName=${$('.executorName-filter').val()}&status=${$('.status-filter').val()}`,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 data: JSON.stringify(rowList)
             })
         }
     });
+
+    $('.select').change(() => {
+        //todo ajax to get filtered list
+
+
+        $('.container > .row').remove();
+
+    });
+
+    //todo прямые ссылки на заявки
+    //todo количество заявок в select
+    //todo возможность двигать заявки с сохранением с любыми фильтрами
 });
