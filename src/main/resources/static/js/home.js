@@ -24,48 +24,59 @@ $(() => {
         return color;
     });
 
-    const sortedDistinct = (array) => {
-        return [...new Set(array)].sort();
-    };
+    const getDataAndDrawPage = (executorNameFilter, statusFilter) => {
+        $.ajax({
+            type: 'GET',
+            url: window.location.origin + `/getData?executorName=${executorNameFilter}&status=${statusFilter}`,
+            success: (data) => {
+                for (const option of data.executorOptList) {
+                    let executorOpt = document.querySelector('.executorName-filter template').content.querySelector('option').cloneNode(true);
+                    executorOpt.value = option.substring(0, option.indexOf('(') - 1);
+                    executorOpt.textContent = option;
+                    $('.executorName-filter').append(executorOpt);
+                }
+                for (const option of data.statusOptMapList) {
+                    let statusOpt = document.querySelector('.executorName-filter template').content.querySelector('option').cloneNode(true);
+                    statusOpt.value = option.substring(0, option.indexOf('(') - 1);
+                    statusOpt.textContent = option;
+                    $('.status-filter').append(statusOpt);
+                }
 
-    const drawList = (list) => {
-        $(list).each((i, el) => $('.container').append($(el)));
-    };
-
-    $.ajax({
-        type: 'GET',
-        url: window.location.origin + `/getData?executorName=${$('.executorName-filter').val()}&status=${$('.status-filter').val()}`,
-        success: (rowList) => {
-            for (const rowFromBack of rowList) {
-                let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
-                $(rowHtml).find('.id').text(rowFromBack.id);
-                $(rowHtml).find('.src').text(rowFromBack.src);
-                if (rowFromBack.creationDateTime) {
-                    $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
+                for (const rowFromBack of data.resultList) {
+                    let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
+                    $(rowHtml).find('.id').text(rowFromBack.id);
+                    $(rowHtml).find('.src').text(rowFromBack.src);
+                    if (rowFromBack.creationDateTime) {
+                        $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
+                    }
+                    $(rowHtml).find('.client').text(rowFromBack.client);
+                    $(rowHtml).find('.creatorName').text(rowFromBack.creatorName);
+                    $(rowHtml).find('.executorName').text(rowFromBack.executorName);
+                    $(rowHtml).find('.description').text(rowFromBack.description);
+                    if (rowFromBack.lastChangedDateTime) {
+                        $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
+                    }
+                    $(rowHtml).find('.priority').text(rowFromBack.priority);
+                    $(rowHtml).find('.status').text(rowFromBack.status);
+                    $(rowHtml).addClass(priorityColor(rowFromBack.priority));
+                    if (rowFromBack.isDragged) {
+                        $(rowHtml).addClass('isDragged');
+                    }
+                    if (rowFromBack.isAlmostExpired) {
+                        $(rowHtml).addClass('almostExpired');
+                    }
+                    if (rowFromBack.priorityChanged) {
+                        $(rowHtml).find('.priority').addClass('priorityChanged');
+                    }
+                    $('.container').append(rowHtml);
                 }
-                $(rowHtml).find('.client').text(rowFromBack.client);
-                $(rowHtml).find('.creatorName').text(rowFromBack.creatorName);
-                $(rowHtml).find('.executorName').text(rowFromBack.executorName);
-                $(rowHtml).find('.description').text(rowFromBack.description);
-                if (rowFromBack.lastChangedDateTime) {
-                    $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
-                }
-                $(rowHtml).find('.priority').text(rowFromBack.priority);
-                $(rowHtml).find('.status').text(rowFromBack.status);
-                $(rowHtml).addClass(priorityColor(rowFromBack.priority));
-                if (rowFromBack.isDragged) {
-                    $(rowHtml).addClass('isDragged');
-                }
-                if (rowFromBack.isAlmostExpired) {
-                    $(rowHtml).addClass('almostExpired');
-                }
-                if (rowFromBack.priorityChanged) {
-                    $(rowHtml).find('.priority').addClass('priorityChanged');
-                }
-                $('.container').append(rowHtml);
+                $('.executorName-filter').val(executorNameFilter);
+                $('.status-filter').val(statusFilter);
             }
-        }
-    });
+        });
+    };
+
+    getDataAndDrawPage($('.executorName-filter').val(), $('.status-filter').val());
 
     $('.container').sortable({
         onUpdate: (evt) => {
@@ -90,12 +101,12 @@ $(() => {
         }
     });
 
-    $('.select').change(() => {
-        //todo ajax to get filtered list
-
-
+    $('select').change(() => {
+        let executorNameFilter = $('.executorName-filter').val();
+        let statusFilter = $('.status-filter').val();
         $('.container > .row').remove();
-
+        $('select .varOpt').remove();
+        getDataAndDrawPage(executorNameFilter, statusFilter);
     });
 
     //todo прямые ссылки на заявки

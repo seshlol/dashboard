@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.fheads.entities.SavedTask;
 
+import java.util.List;
+
 @Repository
 public interface SavedTaskRepository extends CrudRepository<SavedTask, String> {
 
@@ -14,4 +16,6 @@ public interface SavedTaskRepository extends CrudRepository<SavedTask, String> {
     @Modifying
     @Query(value = "DELETE FROM SavedTask st WHERE st.executorName = ?1 AND st.status = ?2")
     void deleteByExecutorNameAndStatus(String executorName, String status);
+
+    List<SavedTask> findAllByExecutorNameAndStatusOrderByPosition(String executorName, String status);
 }
