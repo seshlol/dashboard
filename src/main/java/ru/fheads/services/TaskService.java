@@ -1,12 +1,12 @@
 package ru.fheads.services;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import ru.fheads.dao.TaskDAO;
 import ru.fheads.entities.SavedTask;
 import ru.fheads.entities.Task;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -222,5 +222,51 @@ public class TaskService {
                     .collect(Collectors.toList());
         }
         return list;
+    }
+
+    public void fillSelectorsList(Map<String, Object> data, List<Task> list) {
+        Map<String, Integer> executorOptMap = new HashMap<>();
+        Map<String, Integer> statusOptMap = new HashMap<>();
+        list.forEach(t -> {
+            String name = t.getExecutorName();
+            String stat = t.getStatus();
+            if (executorOptMap.containsKey(name)) {
+                executorOptMap.put(name, executorOptMap.get(name) + 1);
+            } else {
+                executorOptMap.put(name, 1);
+            }
+            if (statusOptMap.containsKey(stat)) {
+                statusOptMap.put(stat, statusOptMap.get(stat) + 1);
+            } else {
+                statusOptMap.put(stat, 1);
+            }
+        });
+        List<String> executorOptList = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : executorOptMap.entrySet()) {
+            executorOptList.add(e.getKey() + " (" + e.getValue() + ")");
+        }
+        List<String> statusOptList = new ArrayList<>();
+        for (Map.Entry<String, Integer> e : statusOptMap.entrySet()) {
+            statusOptList.add(e.getKey() + " (" + e.getValue() + ")");
+        }
+        Collections.sort(executorOptList);
+        executorOptList.add(0, "Любой (" + list.size() + ")");
+        Collections.sort(statusOptList);
+        statusOptList.add(0, "Любой (" + list.size() + ")");
+        data.put("executorOptList", executorOptList);
+        data.put("statusOptList", statusOptList);
+    }
+
+    public void getTasks(List<Task> list, List<TaskDAO> taskDAOS, ExecutorService executorService) {
+        List<Future<List<Task>>> futures = taskDAOS.stream()
+                .map(dao -> executorService.submit(dao::getTasks))
+                .collect(Collectors.toList());
+        for (Future<List<Task>> future : futures){
+            try {
+                list.addAll(future.get(2, TimeUnit.SECONDS));
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
