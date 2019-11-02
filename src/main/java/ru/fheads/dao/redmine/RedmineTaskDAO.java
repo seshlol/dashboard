@@ -35,7 +35,8 @@ public class RedmineTaskDAO implements TaskDAO {
                                 "       issue_statuses.name                                  AS status, " +
                                 "       FALSE                                                AS isDragged, " +
                                 "       FALSE                                                AS isAlmostExpired, " +
-                                "       FALSE                                                AS priorityChanged " +
+                                "       FALSE                                                AS priorityChanged, " +
+                                "       CONCAT('https://redmine.f-heads.com/issues/', issues.id) AS href " +
                                 "FROM issues " +
                                 "         INNER JOIN projects " +
                                 "                    ON issues.project_id = projects.id " +

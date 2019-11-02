@@ -35,7 +35,7 @@ $(() => {
                     executorOpt.textContent = option;
                     $('.executorName-filter').append(executorOpt);
                 }
-                for (const option of data.statusOptMapList) {
+                for (const option of data.statusOptList) {
                     let statusOpt = document.querySelector('.executorName-filter template').content.querySelector('option').cloneNode(true);
                     statusOpt.value = option.substring(0, option.indexOf('(') - 1);
                     statusOpt.textContent = option;
@@ -44,7 +44,8 @@ $(() => {
 
                 for (const rowFromBack of data.resultList) {
                     let rowHtml = document.querySelector('.container template').content.querySelector('tr').cloneNode(true);
-                    $(rowHtml).find('.id').text(rowFromBack.id);
+                    $(rowHtml).find('.id a').attr('href', rowFromBack.href);
+                    $(rowHtml).find('.id a').text(rowFromBack.id);
                     $(rowHtml).find('.src').text(rowFromBack.src);
                     if (rowFromBack.creationDateTime) {
                         $(rowHtml).find('.creationDateTime').text(normalizeDate(rowFromBack.creationDateTime));
@@ -76,7 +77,7 @@ $(() => {
         });
     };
 
-    getDataAndDrawPage($('.executorName-filter').val(), $('.status-filter').val());
+    getDataAndDrawPage('Любой', 'Любой');
 
     $('.container').sortable({
         onUpdate: (evt) => {

@@ -47,7 +47,7 @@ table {
 .filters {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     border-left: 1px solid black;
     border-right: 1px solid black;
     border-top: 1px solid black;
@@ -55,7 +55,9 @@ table {
 }
 
 select {
+    margin-right: 2%;
     border: 1px solid black;
+    width: 16%;
 }
 
 .filters span {
@@ -100,9 +102,3 @@ td {
     font-weight: bold;
     color: blue;
 }
-
-.filters button {
-    margin-left: 2%;
-    border: 1px solid black;
-}
-

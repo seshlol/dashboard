@@ -1277,3 +1277,11 @@ drop SAVEDTASK [42001-199]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "HIBERNATE_SEQUENCE" не найдена
 Table "HIBERNATE_SEQUENCE" not found; SQL statement:
 select next_val as id_val from hibernate_sequence for update [42102-199]
+2019-11-02 19:10:09 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "NEXT_VAL[*]"
+Syntax error in SQL statement "NEXT_VAL[*]"; SQL statement:
+NEXT_VAL [42000-199]
+2019-11-02 19:17:22 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "ALTER TABLE SAVEDTASK DELETE[*] COLUMN HREF "; ожидалось "., ADD, SET, RENAME, DROP, CHANGE, MODIFY, ALTER"
+Syntax error in SQL statement "ALTER TABLE SAVEDTASK DELETE[*] COLUMN HREF "; expected "., ADD, SET, RENAME, DROP, CHANGE, MODIFY, ALTER"; SQL statement:
+alter table SAVEDTASK delete column href [42001-199]

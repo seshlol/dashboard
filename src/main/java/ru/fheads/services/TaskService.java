@@ -211,12 +211,12 @@ public class TaskService {
     }
 
     public List<Task> filter(List<Task> list, String executorName, String status) {
-        if (!"Any".equals(executorName)) {
+        if (!"Любой".equals(executorName)) {
             list = list.stream()
                     .filter(t -> t.getExecutorName().equals(executorName))
                     .collect(Collectors.toList());
         }
-        if (!"Any".equals(status)) {
+        if (!"Любой".equals(status)) {
             list = list.stream()
                     .filter(t -> t.getStatus().equals(status))
                     .collect(Collectors.toList());

@@ -35,7 +35,8 @@ public class sdTaskDAO implements TaskDAO {
                                 "       sd_status.name        AS status, " +
                                 "       FALSE                 AS isDragged, " +
                                 "       FALSE                 AS isAlmostExpired, " +
-                                "       FALSE                 AS priorityChanged " +
+                                "       FALSE                 AS priorityChanged, " +
+                                "       CONCAT('http://sd.f-heads.ru/tickets/', sd_ticket.id) AS href " +
                                 "FROM sd_ticket " +
                                 "         INNER JOIN sd_client " +
                                 "                    ON sd_ticket.client_id = sd_client.id " +

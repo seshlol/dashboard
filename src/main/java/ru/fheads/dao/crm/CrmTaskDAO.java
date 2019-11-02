@@ -35,7 +35,8 @@ public class CrmTaskDAO implements TaskDAO {
                                 "       vtiger_activity.status                                                                                AS status, " +
                                 "       FALSE                                                                                                 AS isDragged, " +
                                 "       FALSE                                                                                                 AS isAlmostExpired, " +
-                                "       FALSE                                                                                                 AS priorityChanged " +
+                                "       FALSE                                                                                                 AS priorityChanged, " +
+                                "       CONCAT('http://crm.f-heads.com/index.php?module=Potentials&view=Detail&record=', vtiger_activity.activityid) AS href " +
                                 "FROM vtiger_activity " +
                                 "         JOIN vtiger_taskpriority " +
                                 "                    ON vtiger_activity.priority = vtiger_taskpriority.taskpriority " +

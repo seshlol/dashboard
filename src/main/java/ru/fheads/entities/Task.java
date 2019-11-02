@@ -41,4 +41,6 @@ public class Task {
     private Boolean isAlmostExpired;
 
     private Boolean priorityChanged;
+
+    private String href;
 }

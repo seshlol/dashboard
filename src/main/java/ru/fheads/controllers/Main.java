@@ -85,7 +85,9 @@ public class Main {
             statusOptList.add(e.getKey() + " (" + e.getValue() + ")");
         }
         Collections.sort(executorOptList);
+        executorOptList.add(0, "Любой (" + queriedList.size() + ")");
         Collections.sort(statusOptList);
+        statusOptList.add(0, "Любой (" + queriedList.size() + ")");
 
         queriedList = taskService.filter(queriedList, executorName, status);
         queriedList = taskService.sortByPriorityThenByCreationDate(queriedList);
@@ -102,7 +104,7 @@ public class Main {
         Map<String, Object> data = new HashMap<>();
         data.put("resultList", resultList);
         data.put("executorOptList", executorOptList);
-        data.put("statusOptMapList", statusOptList);
+        data.put("statusOptList", statusOptList);
         return data;
     }
 
