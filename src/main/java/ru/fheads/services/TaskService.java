@@ -1,5 +1,6 @@
 package ru.fheads.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.fheads.dao.TaskDAO;
 import ru.fheads.entities.SavedTask;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TaskService {
 
