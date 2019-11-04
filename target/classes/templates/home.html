@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="shortcut icon" type="image/ico" href="../static/img/misc/favicon.png" th:href="@{/img/misc/favicon.png}">
+    <link rel="stylesheet" href="../static/css/home.css" th:href="@{/css/home.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+    <script src="../static/js/home.js" th:src="@{/js/home.js}"></script>
+</head>
+<body>
+<div class="main">
+    <div class="title filters">
+        <span>Исполнитель:</span>
+        <select class="executorName-filter">
+            <template>
+                <option class="varOpt"></option>
+            </template>
+        </select>
+        <span>Статус:</span>
+        <select class="status-filter">
+            <template>
+                <option class="varOpt"></option>
+            </template>
+        </select>
+    </div>
+    <table>
+        <tr class="title">
+            <th class="w1">#</th>
+            <th class="w1">Ресурс</th>
+            <th class="w2">Создана</th>
+            <th class="w2">Клиент/Проект</th>
+            <th class="w2">Инициатор</th>
+            <th class="w2">Исполнитель</th>
+            <th class="w3">Описание</th>
+            <th class="w2">Изменена</th>
+            <th class="w1">Приоритет</th>
+            <th class="w1">Статус</th>
+        </tr>
+        <tbody class="container">
+        <template>
+            <tr class="row">
+                <td class="id"><a target="_blank" rel="noopener noreferrer" href=""></a></td>
+                <td class="src"></td>
+                <td class="creationDateTime"></td>
+                <td class="client"></td>
+                <td class="creatorName"></td>
+                <td class="executorName"></td>
+                <td class="description"></td>
+                <td class="lastChangedDateTime"></td>
+                <td class="priority"></td>
+                <td class="status"></td>
+            </tr>
+        </template>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
