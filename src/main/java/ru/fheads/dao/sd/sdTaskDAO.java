@@ -33,6 +33,10 @@ public class sdTaskDAO implements TaskDAO {
                             "       sd_specialist.name    AS executorName, " +
                             "       sd_ticket.txt         AS description, " +
                             "       sd_ticket.sd          AS lastChangedDateTime, " +
+                            "       (SELECT sd_scomment.txt FROM sd_scomment" +
+                            "           WHERE sd_scomment.ticket_id = sd_ticket.id " +
+                            "           ORDER BY sd_scomment.fd DESC LIMIT 1) " +
+                            "                             AS lastComment, " +
                             "       sd_ticket.priority_id AS priority, " +
                             "       sd_status.name        AS status, " +
                             "       FALSE                 AS isDragged, " +

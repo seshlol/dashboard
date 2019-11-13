@@ -13,11 +13,11 @@ body {
 }
 
 .w2 {
-    width: 8%;
+    width: 6%;
 }
 
 .w3 {
-    width: 32%;
+    width: 24%;
 }
 
 .p1 {
@@ -87,8 +87,11 @@ td {
     text-align: center;
 }
 
-.row .description {
+.description, .lastComment {
+    max-width: 24%;
     text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .almostExpired td {

@@ -57,6 +57,9 @@ $(() => {
                     if (rowFromBack.lastChangedDateTime) {
                         $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
                     }
+                    if (rowFromBack.lastComment) {
+                        rowHtml.querySelector('.lastComment').innerHTML = rowFromBack.lastComment.replace('pre>', 'p>');
+                    }
                     $(rowHtml).find('.priority').text(rowFromBack.priority);
                     $(rowHtml).find('.status').text(rowFromBack.status);
                     $(rowHtml).addClass(priorityColor(rowFromBack.priority));
@@ -109,8 +112,4 @@ $(() => {
         $('select .varOpt').remove();
         getDataAndDrawPage(executorNameFilter, statusFilter);
     });
-
-    //todo прямые ссылки на заявки
-    //todo количество заявок в select
-    //todo возможность двигать заявки с сохранением с любыми фильтрами
 });

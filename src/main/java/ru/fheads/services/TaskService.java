@@ -30,7 +30,7 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    private void setSdProperPriority(Task task) {
+    private void setSdProperProperties(Task task) {
         switch (task.getPriority()) {
             case 1: {
                 task.setPriority((byte) 4);
@@ -65,18 +65,23 @@ public class TaskService {
         }
     }
 
-    private void setRedmineProperPriority(Task task) {
+    private void setRedmineProperProperties(Task task) {
         switch (task.getPriority()) {
-            case 3: {
-                task.setPriority((byte) 2);
+            case 1: {
+                task.setPriority((byte) 4);
                 break;
             }
-            case 4: {
+            case 2: {
                 task.setPriority((byte) 3);
                 break;
             }
+            case 3:
+            case 4: {
+                task.setPriority((byte) 2);
+                break;
+            }
             case 5: {
-                task.setPriority((byte) 4);
+                task.setPriority((byte) 1);
                 break;
             }
         }
@@ -96,7 +101,7 @@ public class TaskService {
         }
     }
 
-    private void setCrmProperPriority(Task task) {
+    private void setCrmProperProperties(Task task) {
         switch (task.getPriority()) {
             case 2: {
                 task.setPriority((byte) 3);
@@ -197,15 +202,15 @@ public class TaskService {
                 .peek(t -> {
                     switch (t.getSrc()) {
                         case "Service Desk": {
-                            setSdProperPriority(t);
+                            setSdProperProperties(t);
                             break;
                         }
                         case "Redmine": {
-                            setRedmineProperPriority(t);
+                            setRedmineProperProperties(t);
                             break;
                         }
                         case "CRM": {
-                            setCrmProperPriority(t);
+                            setCrmProperProperties(t);
                             break;
                         }
                     }

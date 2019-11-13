@@ -28,11 +28,12 @@ public class CrmTaskDAO implements TaskDAO {
                     "SELECT vtiger_activity.activityid                                                                                    AS id, " +
                             "   'CRM'                                                                                                        AS src, " +
                             "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS creationDateTime, " +
-                            "   vtiger_activity.activitytype                                                                                 AS client, " +
-                            "   'Пользователь CRM'                                                                                           AS creatorName, " +
-                            "   'Пользователь CRM'                                                                                           AS executorName, " +
+                            "   ''                                                                                                           AS client, " +
+                            "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS creatorName, " +
+                            "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS executorName, " +
                             "   vtiger_activity.subject                                                                                      AS description, " +
-                            "   ''                                                                                                           AS lastChangedDateTime, " +
+                            "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS lastChangedDateTime, " +
+                            "   'Здесь когда-нибудь будет очень информативный комментарий.'                                                  AS lastComment, " +
                             "   vtiger_taskpriority.taskpriorityid                                                                           AS priority, " +
                             "   vtiger_activity.status                                                                                       AS status, " +
                             "   FALSE                                                                                                        AS isDragged, " +
@@ -40,11 +41,14 @@ public class CrmTaskDAO implements TaskDAO {
                             "   FALSE                                                                                                        AS priorityChanged, " +
                             "   CONCAT('http://crm.f-heads.com/index.php?module=Potentials&view=Detail&record=', vtiger_activity.activityid) AS href " +
                             "FROM vtiger_activity " +
-                            "   JOIN vtiger_taskpriority " +
+                            "   INNER JOIN vtiger_taskpriority " +
                             "       ON vtiger_activity.priority = vtiger_taskpriority.taskpriority " +
-                            "WHERE vtiger_activity.status != 'Completed' " +
-                            "   AND vtiger_activity.status != 'Завершено' " +
-                            "   AND vtiger_activity.status IS NOT NULL;"
+                            "   INNER JOIN vtiger_salesmanactivityrel " +
+                            "       ON vtiger_activity.activityid = vtiger_salesmanactivityrel.activityid " +
+                            "   INNER JOIN vtiger_users " +
+                            "       ON vtiger_salesmanactivityrel.smid = vtiger_users.id " +
+                            "WHERE vtiger_activity.activitytype = 'Task' " +
+                            "   AND vtiger_activity.status NOT IN ('Completed', 'Завершено', 'Deffered');"
                     , Task.class)
                     .getResultList();
         } finally {

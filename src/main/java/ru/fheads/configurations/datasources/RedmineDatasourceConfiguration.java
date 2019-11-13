@@ -24,14 +24,12 @@ import javax.sql.DataSource;
         transactionManagerRef = "redmineTransactionManager")
 public class RedmineDatasourceConfiguration {
 
-    @Primary
     @Bean
     @ConfigurationProperties("spring.datasource")
     public DataSourceProperties redmineDataSourceProperties() {
         return new DataSourceProperties();
     }
 
-    @Primary
     @Bean
     @ConfigurationProperties("app.datasource.configuration")
     public DataSource redmineDataSource() {
@@ -39,7 +37,6 @@ public class RedmineDatasourceConfiguration {
                 .type(HikariDataSource.class).build();
     }
 
-    @Primary
     @Bean(name = "redmineEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean redmineEntityManagerFactory(EntityManagerFactoryBuilder builder) {
         return builder
@@ -48,7 +45,6 @@ public class RedmineDatasourceConfiguration {
                 .build();
     }
 
-    @Primary
     @Bean
     public PlatformTransactionManager redmineTransactionManager(
             final @Qualifier("redmineEntityManagerFactory") LocalContainerEntityManagerFactoryBean redmineEntityManagerFactory) {

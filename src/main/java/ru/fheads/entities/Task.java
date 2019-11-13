@@ -32,6 +32,8 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastChangedDateTime;
 
+    private String lastComment;
+
     private byte priority;
 
     private String status;

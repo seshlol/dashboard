@@ -24,12 +24,14 @@ import javax.sql.DataSource;
         transactionManagerRef = "sdTransactionManager")
 public class SdDatasourceConfiguration {
 
+    @Primary
     @Bean
     @ConfigurationProperties("spring.datasource3")
     public DataSourceProperties sdDataSourceProperties() {
         return new DataSourceProperties();
     }
 
+    @Primary
     @Bean
     @ConfigurationProperties("spring.datasource3.configuration")
     public DataSource sdDataSource() {
@@ -37,6 +39,7 @@ public class SdDatasourceConfiguration {
                 .type(HikariDataSource.class).build();
     }
 
+    @Primary
     @Bean(name = "sdEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean sdEntityManagerFactory(EntityManagerFactoryBuilder builder) {
         return builder
@@ -45,6 +48,7 @@ public class SdDatasourceConfiguration {
                 .build();
     }
 
+    @Primary
     @Bean
     public PlatformTransactionManager sdTransactionManager(
             final @Qualifier("sdEntityManagerFactory") LocalContainerEntityManagerFactoryBean sdEntityManagerFactory) {

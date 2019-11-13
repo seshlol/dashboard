@@ -33,6 +33,10 @@ public class RedmineTaskDAO implements TaskDAO {
                             "       CONCAT(executors.lastname, ' ', executors.firstname) AS executorName, " +
                             "       issues.subject                                       AS description, " +
                             "       issues.updated_on                                    AS lastChangedDateTime, " +
+                            "       (SELECT notes FROM journals" +
+                            "           WHERE journalized_id = issues.id " +
+                            "           AND notes != '' AND notes IS NOT NULL " +
+                            "           ORDER BY created_on DESC LIMIT 1) AS lastComment, " +
                             "       issues.priority_id                                   AS priority, " +
                             "       issue_statuses.name                                  AS status, " +
                             "       FALSE                                                AS isDragged, " +
