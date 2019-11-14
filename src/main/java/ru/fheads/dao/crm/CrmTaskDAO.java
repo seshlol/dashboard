@@ -7,7 +7,6 @@ import ru.fheads.entities.Task;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -28,30 +27,36 @@ public class CrmTaskDAO implements TaskDAO {
                     "SELECT vtiger_activity.activityid                                                                                    AS id, " +
                             "   'CRM'                                                                                                        AS src, " +
                             "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS creationDateTime, " +
-                            "   ''                                                                                                           AS client, " +
+                            "   labels.label                                                                                                 AS client, " +
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS creatorName, " +
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS executorName, " +
                             "   vtiger_activity.subject                                                                                      AS description, " +
                             "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS lastChangedDateTime, " +
                             "   vtiger_activity.due_date                                                                                     AS plannedEndDateTime, " +
-                            "   vtiger_crmentity.description                                                                                 AS lastComment, " +
-                            "   vtiger_taskpriority.taskpriorityid                                                                           AS priority, " +
+                            "   descriptions.description                                                                                     AS lastComment, " +
+                            "   (CASE WHEN vtiger_activity.priority = '' OR vtiger_activity.priority IS NULL " +
+                            "   THEN 3 ELSE vtiger_taskpriority.taskpriorityid END)                                                          AS priority, " +
                             "   vtiger_activity.status                                                                                       AS status, " +
                             "   FALSE                                                                                                        AS isDragged, " +
                             "   FALSE                                                                                                        AS isExpired, " +
                             "   FALSE                                                                                                        AS priorityChanged, " +
-                            "   CONCAT('http://crm.f-heads.com/index.php?module=Potentials&view=Detail&record=', vtiger_activity.activityid) AS href " +
+                            "   CONCAT('http://crm.f-heads.com/index.php?module=Calendar&view=Detail&record=', vtiger_activity.activityid)   AS href " +
                             "FROM vtiger_activity " +
-                            "   INNER JOIN vtiger_taskpriority " +
+                            "   LEFT JOIN vtiger_taskpriority " +
                             "       ON vtiger_activity.priority = vtiger_taskpriority.taskpriority " +
                             "   INNER JOIN vtiger_salesmanactivityrel " +
                             "       ON vtiger_activity.activityid = vtiger_salesmanactivityrel.activityid " +
                             "   INNER JOIN vtiger_users " +
                             "       ON vtiger_salesmanactivityrel.smid = vtiger_users.id " +
-                            "   INNER JOIN vtiger_crmentity " +
-                            "       ON vtiger_activity.activityid = vtiger_crmentity.crmid " +
+                            "   INNER JOIN vtiger_crmentity AS descriptions " +
+                            "       ON vtiger_activity.activityid = descriptions.crmid " +
+                            "   INNER JOIN vtiger_seactivityrel " +
+                            "       ON vtiger_activity.activityid = vtiger_seactivityrel.activityid " +
+                            "   INNER JOIN vtiger_crmentity AS labels " +
+                            "       ON vtiger_seactivityrel.crmid = labels.crmid " +
                             "WHERE vtiger_activity.activitytype = 'Task' " +
-                            "   AND vtiger_activity.status NOT IN ('Completed', 'Завершено', 'Deffered');"
+                            "   AND descriptions.deleted != 1 " +
+                            "   AND vtiger_activity.status NOT IN ('Completed', 'Завершено', 'Deffered', 'Отменено');"
                     , Task.class)
                     .getResultList();
         } finally {

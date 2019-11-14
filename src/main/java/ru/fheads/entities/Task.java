@@ -14,7 +14,7 @@ import java.util.Date;
 public class Task {
 
     @Id
-    private long id;
+    private Long id;
 
     private String src;
 
@@ -37,7 +37,7 @@ public class Task {
 
     private String lastComment;
 
-    private byte priority;
+    private Byte priority;
 
     private String status;
 
