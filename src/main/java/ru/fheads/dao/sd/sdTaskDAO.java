@@ -33,6 +33,7 @@ public class sdTaskDAO implements TaskDAO {
                             "       sd_specialist.name    AS executorName, " +
                             "       sd_ticket.txt         AS description, " +
                             "       sd_ticket.sd          AS lastChangedDateTime, " +
+                            "       sd_ticket.plan_end_time AS plannedEndDateTime, " +
                             "       (SELECT sd_scomment.txt FROM sd_scomment" +
                             "           WHERE sd_scomment.ticket_id = sd_ticket.id " +
                             "           ORDER BY sd_scomment.fd DESC LIMIT 1) " +
@@ -40,7 +41,7 @@ public class sdTaskDAO implements TaskDAO {
                             "       sd_ticket.priority_id AS priority, " +
                             "       sd_status.name        AS status, " +
                             "       FALSE                 AS isDragged, " +
-                            "       FALSE                 AS isAlmostExpired, " +
+                            "       FALSE                 AS isExpired, " +
                             "       FALSE                 AS priorityChanged, " +
                             "       CONCAT('http://sd.f-heads.ru/tickets/', sd_ticket.id) AS href " +
                             "FROM sd_ticket " +

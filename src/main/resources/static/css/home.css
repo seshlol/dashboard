@@ -55,13 +55,12 @@ table {
 }
 
 select {
-    margin-right: 2%;
+    margin-right: 4%;
     border: 1px solid black;
     width: 16%;
 }
 
 .filters span {
-    margin-left: 2%;
     margin-right: 4px;
 }
 
@@ -94,7 +93,7 @@ td {
     overflow-wrap: break-word;
 }
 
-.almostExpired td {
+.expired td {
     font-weight: 700;
     font-size: 16px;
 }
@@ -104,4 +103,9 @@ td {
     font-size: 16px;
     font-weight: bold;
     color: blue;
+}
+
+.refresh {
+    border: 1px solid black;
+    margin-right: 2%;
 }

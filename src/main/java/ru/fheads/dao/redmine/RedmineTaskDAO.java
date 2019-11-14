@@ -33,6 +33,7 @@ public class RedmineTaskDAO implements TaskDAO {
                             "       CONCAT(executors.lastname, ' ', executors.firstname) AS executorName, " +
                             "       issues.subject                                       AS description, " +
                             "       issues.updated_on                                    AS lastChangedDateTime, " +
+                            "       custom_values.value                                  AS plannedEndDateTime, " +
                             "       (SELECT notes FROM journals" +
                             "           WHERE journalized_id = issues.id " +
                             "           AND notes != '' AND notes IS NOT NULL " +
@@ -40,7 +41,7 @@ public class RedmineTaskDAO implements TaskDAO {
                             "       issues.priority_id                                   AS priority, " +
                             "       issue_statuses.name                                  AS status, " +
                             "       FALSE                                                AS isDragged, " +
-                            "       FALSE                                                AS isAlmostExpired, " +
+                            "       FALSE                                                AS isExpired, " +
                             "       FALSE                                                AS priorityChanged, " +
                             "       CONCAT('https://redmine.f-heads.com/issues/', issues.id) AS href " +
                             "FROM issues " +
@@ -52,6 +53,8 @@ public class RedmineTaskDAO implements TaskDAO {
                             "                    ON issues.assigned_to_id = executors.id " +
                             "         INNER JOIN issue_statuses " +
                             "                    ON issues.status_id = issue_statuses.id " +
+                            "         INNER JOIN custom_values" +
+                            "                    ON custom_values.customized_id = issues.id " +
                             "WHERE issues.status_id != 5 " +
                             "  AND issues.status_id != 6;"
                     , Task.class)

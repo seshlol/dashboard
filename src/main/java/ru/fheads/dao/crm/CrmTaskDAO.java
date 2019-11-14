@@ -33,11 +33,12 @@ public class CrmTaskDAO implements TaskDAO {
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS executorName, " +
                             "   vtiger_activity.subject                                                                                      AS description, " +
                             "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS lastChangedDateTime, " +
-                            "   'Здесь когда-нибудь будет очень информативный комментарий.'                                                  AS lastComment, " +
+                            "   vtiger_activity.due_date                                                                                     AS plannedEndDateTime, " +
+                            "   vtiger_crmentity.description                                                                                 AS lastComment, " +
                             "   vtiger_taskpriority.taskpriorityid                                                                           AS priority, " +
                             "   vtiger_activity.status                                                                                       AS status, " +
                             "   FALSE                                                                                                        AS isDragged, " +
-                            "   FALSE                                                                                                        AS isAlmostExpired, " +
+                            "   FALSE                                                                                                        AS isExpired, " +
                             "   FALSE                                                                                                        AS priorityChanged, " +
                             "   CONCAT('http://crm.f-heads.com/index.php?module=Potentials&view=Detail&record=', vtiger_activity.activityid) AS href " +
                             "FROM vtiger_activity " +
@@ -47,6 +48,8 @@ public class CrmTaskDAO implements TaskDAO {
                             "       ON vtiger_activity.activityid = vtiger_salesmanactivityrel.activityid " +
                             "   INNER JOIN vtiger_users " +
                             "       ON vtiger_salesmanactivityrel.smid = vtiger_users.id " +
+                            "   INNER JOIN vtiger_crmentity " +
+                            "       ON vtiger_activity.activityid = vtiger_crmentity.crmid " +
                             "WHERE vtiger_activity.activitytype = 'Task' " +
                             "   AND vtiger_activity.status NOT IN ('Completed', 'Завершено', 'Deffered');"
                     , Task.class)

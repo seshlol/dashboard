@@ -1,4 +1,0 @@
-2019-11-09 10:42:14 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "SAVEDTASK" не найдена
-Table "SAVEDTASK" not found; SQL statement:
-select savedtask0_.id as id1_0_, savedtask0_.compositeId as composit2_0_, savedtask0_.executorName as executor3_0_, savedtask0_.isDragged as isDragge4_0_, savedtask0_.position as position5_0_, savedtask0_.priority as priority6_0_, savedtask0_.status as status7_0_ from SavedTask savedtask0_ where savedtask0_.executorName=? and savedtask0_.status=? order by savedtask0_.position asc [42102-199]

@@ -6,6 +6,8 @@ import ru.fheads.dao.TaskDAO;
 import ru.fheads.entities.SavedTask;
 import ru.fheads.entities.Task;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
-    private static final String STATUS_NEW = "Новая";
+    private static final String STATUS_AWAITING_PROCESSING = "Ожидает обработки";
     private static final String STATUS_IN_WORK = "В работе";
     private static final String STATUS_UNDER_CONSIDERATION = "На рассмотрении";
     private static final String STATUS_FOR_REVISION = "На доработку";
@@ -43,7 +45,7 @@ public class TaskService {
         }
         switch (task.getStatus()) {
             case "ожидает обработки": {
-                task.setStatus(STATUS_NEW);
+                task.setStatus(STATUS_AWAITING_PROCESSING);
                 break;
             }
             case "в процессе выполнения": {
@@ -86,10 +88,6 @@ public class TaskService {
             }
         }
         switch (task.getStatus()) {
-            case "Ожидает обработки": {
-                task.setStatus(STATUS_NEW);
-                break;
-            }
             case "Запланирована": {
                 task.setStatus(STATUS_PLANNED);
                 break;
@@ -124,7 +122,7 @@ public class TaskService {
                 break;
             }
             case "Not Started": {
-                task.setStatus(STATUS_NEW);
+                task.setStatus(STATUS_AWAITING_PROCESSING);
                 break;
             }
             case "Planned": {

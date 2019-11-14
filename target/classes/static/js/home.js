@@ -57,6 +57,9 @@ $(() => {
                     if (rowFromBack.lastChangedDateTime) {
                         $(rowHtml).find('.lastChangedDateTime').text(normalizeDate(rowFromBack.lastChangedDateTime));
                     }
+                    if (rowFromBack.plannedEndDateTime) {
+                        $(rowHtml).find('.plannedEndDateTime').text(normalizeDate(rowFromBack.plannedEndDateTime).split(' ')[0]);
+                    }
                     if (rowFromBack.lastComment) {
                         rowHtml.querySelector('.lastComment').innerHTML = rowFromBack.lastComment.replace('pre>', 'p>');
                     }
@@ -66,8 +69,8 @@ $(() => {
                     if (rowFromBack.isDragged) {
                         $(rowHtml).addClass('isDragged');
                     }
-                    if (rowFromBack.isAlmostExpired) {
-                        $(rowHtml).addClass('almostExpired');
+                    if (rowFromBack.isExpired) {
+                        $(rowHtml).addClass('expired');
                     }
                     if (rowFromBack.priorityChanged) {
                         $(rowHtml).find('.priority').addClass('priorityChanged');
@@ -105,11 +108,15 @@ $(() => {
         }
     });
 
-    $('select').change(() => {
+    const prepareToSend = () => {
         let executorNameFilter = $('.executorName-filter').val();
         let statusFilter = $('.status-filter').val();
         $('.container > .row').remove();
         $('select .varOpt').remove();
         getDataAndDrawPage(executorNameFilter, statusFilter);
-    });
+    };
+
+    $('select').change(prepareToSend);
+
+    $('.refresh').click(prepareToSend);
 });
