@@ -28,7 +28,7 @@ public class CrmTaskDAO implements TaskDAO {
                             "   'CRM'                                                                                                        AS src, " +
                             "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS creationDateTime, " +
                             "   (CASE WHEN (SELECT COUNT(*) FROM vtiger_seactivityrel " +
-                            "   WHERE activityid = vtiger_activity.activityid) = 1 THEN labels.label ELSE '' END)                                    AS client, " +
+                            "   WHERE activityid = vtiger_activity.activityid) = 1 THEN labels.label ELSE '' END)                            AS client, " +
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS creatorName, " +
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS executorName, " +
                             "   vtiger_activity.subject                                                                                      AS description, " +
