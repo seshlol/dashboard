@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
-    private static final String STATUS_AWAITING_PROCESSING = "Ожидает обработки";
-    private static final String STATUS_IN_WORK = "В работе";
-    private static final String STATUS_UNDER_CONSIDERATION = "На рассмотрении";
-    private static final String STATUS_FOR_REVISION = "На доработку";
-    private static final String STATUS_PENDING = "В ожидании";
-    private static final String STATUS_PLANNED = "Запланирована";
+//    private static final String STATUS_AWAITING_PROCESSING = "Ожидает обработки";
+//    private static final String STATUS_IN_WORK = "В работе";
+//    private static final String STATUS_UNDER_CONSIDERATION = "На рассмотрении";
+//    private static final String STATUS_FOR_REVISION = "На доработку";
+//    private static final String STATUS_PENDING = "В ожидании";
+//    private static final String STATUS_PLANNED = "Запланирована";
 
     private static final Comparator<Task> BY_PRIORITY_THEN_BY_DATE = Comparator.comparing(Task::getPriority)
             .thenComparing(Task::getCreationDateTime, Comparator.reverseOrder());
@@ -43,28 +43,28 @@ public class TaskService {
                 break;
             }
         }
-        switch (task.getStatus()) {
-            case "ожидает обработки": {
-                task.setStatus(STATUS_AWAITING_PROCESSING);
-                break;
-            }
-            case "в процессе выполнения": {
-                task.setStatus(STATUS_IN_WORK);
-                break;
-            }
-            case "на рассмотрении": {
-                task.setStatus(STATUS_UNDER_CONSIDERATION);
-                break;
-            }
-            case "требует доработки": {
-                task.setStatus(STATUS_FOR_REVISION);
-                break;
-            }
-            case "в ожидании": {
-                task.setStatus(STATUS_PENDING);
-                break;
-            }
-        }
+//        switch (task.getStatus()) {
+//            case "ожидает обработки": {
+//                task.setStatus(STATUS_AWAITING_PROCESSING);
+//                break;
+//            }
+//            case "в процессе выполнения": {
+//                task.setStatus(STATUS_IN_WORK);
+//                break;
+//            }
+//            case "на рассмотрении": {
+//                task.setStatus(STATUS_UNDER_CONSIDERATION);
+//                break;
+//            }
+//            case "требует доработки": {
+//                task.setStatus(STATUS_FOR_REVISION);
+//                break;
+//            }
+//            case "в ожидании": {
+//                task.setStatus(STATUS_PENDING);
+//                break;
+//            }
+//        }
     }
 
     private void setRedmineProperProperties(Task task) {
@@ -77,26 +77,26 @@ public class TaskService {
                 task.setPriority((byte) 3);
                 break;
             }
-            case 3:
-            case 4: {
+            case 3: {
                 task.setPriority((byte) 2);
                 break;
             }
-            case 5: {
+            case 4:
+            case 5:  {
                 task.setPriority((byte) 1);
                 break;
             }
         }
-        switch (task.getStatus()) {
-            case "Запланирована": {
-                task.setStatus(STATUS_PLANNED);
-                break;
-            }
-            case "Приостановлена": {
-                task.setStatus(STATUS_PENDING);
-                break;
-            }
-        }
+//        switch (task.getStatus()) {
+//            case "Запланирована": {
+//                task.setStatus(STATUS_PLANNED);
+//                break;
+//            }
+//            case "Приостановлена": {
+//                task.setStatus(STATUS_PENDING);
+//                break;
+//            }
+//        }
     }
 
     private void setCrmProperProperties(Task task) {
@@ -110,26 +110,26 @@ public class TaskService {
                 break;
             }
         }
-        switch (task.getStatus()) {
-            case "Deferred":
-            case "Pending Input":
-            case "В ожидании": {
-                task.setStatus(STATUS_PENDING);
-                break;
-            }
-            case "In Progress": {
-                task.setStatus(STATUS_IN_WORK);
-                break;
-            }
-            case "Not Started": {
-                task.setStatus(STATUS_AWAITING_PROCESSING);
-                break;
-            }
-            case "Planned": {
-                task.setStatus(STATUS_PLANNED);
-                break;
-            }
-        }
+//        switch (task.getStatus()) {
+//            case "Deferred":
+//            case "Pending Input":
+//            case "В ожидании": {
+//                task.setStatus(STATUS_PENDING);
+//                break;
+//            }
+//            case "In Progress": {
+//                task.setStatus(STATUS_IN_WORK);
+//                break;
+//            }
+//            case "Not Started": {
+//                task.setStatus(STATUS_AWAITING_PROCESSING);
+//                break;
+//            }
+//            case "Planned": {
+//                task.setStatus(STATUS_PLANNED);
+//                break;
+//            }
+//        }
     }
 
     private String getCompositeId(Task task) {

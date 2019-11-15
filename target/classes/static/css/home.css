@@ -106,6 +106,7 @@ td {
 }
 
 .refresh {
+    height: 92%;
     border: 1px solid black;
     margin-right: 2%;
 }
