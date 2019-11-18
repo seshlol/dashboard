@@ -32,7 +32,7 @@ public class CrmTaskDAO implements TaskDAO {
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS creatorName, " +
                             "   CONCAT(vtiger_users.last_name, ' ', vtiger_users.first_name)                                                 AS executorName, " +
                             "   vtiger_activity.subject                                                                                      AS description, " +
-                            "   STR_TO_DATE(CONCAT(vtiger_activity.date_start, ' ', vtiger_activity.time_start), '%Y-%m-%d %H:%i:%s')        AS lastChangedDateTime, " +
+                            "   descriptions.modifiedtime                                                                                    AS lastChangedDateTime, " +
                             "   vtiger_activity.due_date                                                                                     AS plannedEndDateTime, " +
                             "   descriptions.description                                                                                     AS lastComment, " +
                             "   (CASE WHEN vtiger_activity.priority = '' OR vtiger_activity.priority IS NULL " +

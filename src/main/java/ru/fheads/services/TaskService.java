@@ -212,6 +212,9 @@ public class TaskService {
                             break;
                         }
                     }
+                    if (t.getLastComment() != null && t.getLastComment().length() > 300) {
+                        t.setLastComment(t.getLastComment().substring(0, 300) + "...");
+                    }
                 }).collect(Collectors.toList());
     }
 

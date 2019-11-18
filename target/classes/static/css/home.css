@@ -110,3 +110,7 @@ td {
     border: 1px solid black;
     margin-right: 2%;
 }
+
+label {
+    margin-right: 4%;
+}

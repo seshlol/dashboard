@@ -32,7 +32,9 @@ public class sdTaskDAO implements TaskDAO {
                             "       sd_worker.name        AS creatorName, " +
                             "       sd_specialist.name    AS executorName, " +
                             "       sd_ticket.txt         AS description, " +
-                            "       sd_ticket.sd          AS lastChangedDateTime, " +
+                            "       (CASE WHEN sd_ticket.status_id = 1 THEN sd_ticket.fd " +
+                            "       WHEN sd_ticket.sd != '' OR sd_ticket.sd IS NOT NULL THEN sd_ticket.sd " +
+                            "       ELSE sd_ticket.gd END) AS lastChangedDateTime, " +
                             "       sd_ticket.plan_end_time AS plannedEndDateTime, " +
                             "       (SELECT sd_scomment.txt FROM sd_scomment" +
                             "           WHERE sd_scomment.ticket_id = sd_ticket.id " +

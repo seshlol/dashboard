@@ -108,7 +108,7 @@ $(() => {
         }
     });
 
-    const prepareToSend = () => {
+    const prepareAndSend = () => {
         let executorNameFilter = $('.executorName-filter').val();
         let statusFilter = $('.status-filter').val();
         $('.container > .row').remove();
@@ -116,7 +116,13 @@ $(() => {
         getDataAndDrawPage(executorNameFilter, statusFilter);
     };
 
-    $('select').change(prepareToSend);
+    $('select').change(prepareAndSend);
 
-    $('.refresh').click(prepareToSend);
+    setInterval(() => {
+        if ($('.autorefresh').is(':checked')) {
+            prepareAndSend();
+        }
+    }, 30000);
+
+    $('.refresh').click(prepareAndSend);
 });
