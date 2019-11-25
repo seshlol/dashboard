@@ -1,6 +1,8 @@
 'use strict';
 
 $(() => {
+    let isPaused = false;
+
     const normalizeDate = ((str) => {
         return str.substring(0, str.indexOf('.')).replace('T', ' ');
     });
@@ -105,6 +107,12 @@ $(() => {
                 dataType: "json",
                 data: JSON.stringify(rowList)
             })
+        },
+        onStart: (evt) => {
+            isPaused = true;
+        },
+        onEnd: (evt) => {
+            isPaused = false;
         }
     });
 
@@ -120,7 +128,9 @@ $(() => {
 
     setInterval(() => {
         if ($('.autorefresh').is(':checked')) {
-            prepareAndSend();
+            if (!isPaused) {
+                prepareAndSend();
+            }
         }
     }, 30000);
 
