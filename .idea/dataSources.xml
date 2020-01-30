@@ -16,12 +16,12 @@
         <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="crm@195.189.111.13" uuid="50054606-6dd1-41e2-9e9b-4b1d95d9277e">
+    <data-source source="LOCAL" name="crm_20190926@195.189.111.13" uuid="50054606-6dd1-41e2-9e9b-4b1d95d9277e">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <configured-by-url>true</configured-by-url>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://195.189.111.13:43306/crm?serverTimezone=UTC&amp;useLegacyDatetimeCode=false</jdbc-url>
+      <jdbc-url>jdbc:mysql://195.189.111.13:43306/crm_20190926?serverTimezone=UTC&amp;useLegacyDatetimeCode=false</jdbc-url>
       <driver-properties>
         <property name="autoReconnect" value="true" />
         <property name="zeroDateTimeBehavior" value="CONVERT_TO_NULL" />

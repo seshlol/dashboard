@@ -12,6 +12,7 @@ import ru.fheads.services.TaskService;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -45,6 +46,7 @@ public class Main {
         Map<String, Object> data = new HashMap<>();
 
         taskService.getTasks(queriedList, taskDAOS, executorService);
+        queriedList = queriedList.stream().distinct().collect(Collectors.toList());
         queriedList = taskService.setGeneralProperties(queriedList);
 
         taskService.fillSelectorsList(data, queriedList);

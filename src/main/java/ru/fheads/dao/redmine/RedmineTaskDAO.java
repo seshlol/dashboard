@@ -25,7 +25,7 @@ public class RedmineTaskDAO implements TaskDAO {
         EntityManager entityManager = redmineEntityManagerFactory.createEntityManager();
         try {
             return entityManager.createNativeQuery(
-                    "SELECT issues.id                                                 AS id, " +
+                    "SELECT DISTINCT issues.id                                                 AS id, " +
                             "       'Redmine'                                            AS src, " +
                             "       issues.created_on                                    AS creationDateTime, " +
                             "       projects.name                                        AS client, " +

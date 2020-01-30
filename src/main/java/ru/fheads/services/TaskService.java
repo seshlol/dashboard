@@ -136,18 +136,22 @@ public class TaskService {
         return task.getId() + "-" + task.getSrc();
     }
 
-    public void restoreSavedOrder(List<Task> queriedList, List<SavedTask> savedList,
-                                  List<Task> resultList, List<Task> freshList) {
+    public void restoreSavedOrder(
+            List<Task> queriedList,
+            List<SavedTask> savedList,
+            List<Task> resultList,
+            List<Task> freshList
+    ) {
         for (SavedTask savedTask : savedList) {
             for (Task queriedTask : queriedList) {
                 if (savedTask.getCompositeId().equals(getCompositeId(queriedTask))) {
                     if (savedTask.getIsDragged()) {
                         queriedTask.setIsDragged(true);
-                        if (queriedTask.getPriority() != savedTask.getPriority()) {
+                        if (!queriedTask.getPriority().equals(savedTask.getPriority())) {
                             queriedTask.setPriorityChanged(true);
                         }
                     } else {
-                        if (queriedTask.getPriority() != savedTask.getPriority()) {
+                        if (!queriedTask.getPriority().equals(savedTask.getPriority())) {
                             freshList.add(queriedTask);
                             break;
                         }
@@ -232,10 +236,11 @@ public class TaskService {
         return list;
     }
 
+
     public void fillSelectorsList(Map<String, Object> data, List<Task> list) {
         Map<String, Integer> executorOptMap = new HashMap<>();
         Map<String, Integer> statusOptMap = new HashMap<>();
-        list.forEach(t -> {
+        list.forEach(t -> {      //use map.distinct.size instead
             String name = t.getExecutorName();
             String stat = t.getStatus();
             if (executorOptMap.containsKey(name)) {
