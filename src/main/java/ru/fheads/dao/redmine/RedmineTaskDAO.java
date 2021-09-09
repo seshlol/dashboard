@@ -56,7 +56,8 @@ public class RedmineTaskDAO implements TaskDAO {
                             "         INNER JOIN custom_values" +
                             "                    ON custom_values.customized_id = issues.id " +
                             "WHERE issues.status_id != 5 " +
-                            "  AND issues.status_id != 6;"
+                            "  AND issues.status_id != 6 " +
+                            "  AND UPPER(custom_values.customized_type) = 'ISSUE';"
                     , Task.class)
                     .getResultList();
         } finally {
